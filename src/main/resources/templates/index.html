@@ -136,9 +136,18 @@ http://www.tooplate.com/view/2102-constructive
                                                     <th>Teléfono</th>
                                                     <th>Acciones</th>
                                                 </tr>
+                                                
                                                 </thead>
                                                 <tbody>
-
+													 <c:forEach items="${User}" var="user">
+                    									<tr>
+                        									<td>${User.id_Usuario}</td>
+                        									<td>${User.nombre}</td>
+                        									<td>${User.correo}</td>
+                        									<td>${User.telefono}</td>
+                        									
+                    									</tr>
+                									</c:forEach>
                                                 </tbody>
                                             </table>
                                         </div>

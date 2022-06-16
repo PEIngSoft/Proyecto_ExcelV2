@@ -1,10 +1,12 @@
 package com.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.model.User;
 
-public interface UserRepository {
+public interface UserRepository extends JpaRepository<User, Long>{
 
-   void registerUser(User user );
    
+   User findByNombre(String nombre);
    
 }

@@ -1,6 +1,7 @@
 package com.model;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name="rol")
@@ -12,6 +13,8 @@ public class Rol implements Serializable {
    private long id_Rol;
    private String descripicion;
    
+   @ManyToMany(mappedBy = "roles")
+   private Set<User> users;
   
     public Rol() {
 		// TODO Auto-generated constructor stub

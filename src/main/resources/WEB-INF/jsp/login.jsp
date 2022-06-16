@@ -25,10 +25,24 @@
 		<div class="center">
 			<h2 class="form-title" id="login"><span>or</span>Log in</h2>
 			<div class="form-holder">
-				<input type="email" class="input" placeholder="Email" />
-				<input type="password" class="input" placeholder="Password" />
+				<c:url var="add_User_url" value="/user/addUser"/>
+				<form:form action="${add_User_url}" method="post" modelAttribute="User">
+					<form:label path="correo">Correo:</form:label>
+					<input type="email" class="input" placeholder="Email" path="correo"/>
+					<form:label path="nombre">Nombre:</form:label>
+					<input type="text" class="input" placeholder="Nombre" path="nombre"/>
+					<form:label path="documento">Documento:</form:label>
+					<input type="text" class="input" placeholder="Documento" path="documento"/>
+					<form:label path="telefono">Telefono:</form:label>
+					<input type="text" class="input" placeholder="Telefono" path="telefono"/>
+					<form:label path="direccion">Dijspreccion:</form:label>
+					<input type="text" class="input" placeholder="Direccion" path="direccion"/>
+					<form:label path="contrasena">Contraseña:</form:label>
+					<input type="password" class="input" placeholder="ContraseÃ±a" path="contrasena"/>
+				</form:form>
 			</div>
 			<button class="submit-btn">Log in</button>
+			
 		</div>
 	</div>
 </div>

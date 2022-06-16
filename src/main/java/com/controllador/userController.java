@@ -8,12 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.model.User;
 import com.service.EmailService;
+import com.service.ServicioSeguridad;
+import com.service.userService;
+
 @Service
 @Transactional
 @RestController
@@ -23,14 +31,65 @@ public class userController {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private EmailService userService;
+    private EmailService userServiceMail;
     private EntityManager entityManager;
     private EntityManagerFactory entityManagerFactory;
     private JavaMailSender mailSender;
 
+    @Autowired
+    private userService userService;
+    @Autowired
+    private ServicioSeguridad securityService;
+    @Autowired
+    private UserValidator userValidator;
 
 
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String registration(Model model) {
+        if (securityService.isAuthenticated()) {
+            return "redirect:/";
+        }
 
+        model.addAttribute("userForm", new User());
+
+        return "registration";
+    }
+
+    @PostMapping("/registration")
+    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+        userValidator.validate(userForm, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
+        userService.save(userForm);
+
+        securityService.autoLogin(userForm.getNombre(), userForm.getPasswordConfirm());
+
+        return "redirect:/index";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(Model model, String error, String logout) {
+        if (securityService.isAuthenticated()) {
+            return "redirect:/";
+        }
+
+        if (error != null)
+            model.addAttribute("error", "Your username and password is invalid.");
+
+        if (logout != null)
+            model.addAttribute("message", "You have been logged out successfully.");
+
+        return "login";
+    }
+
+    @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
+    public String welcome(Model model) {
+        return "welcome";
+    }
+    
 
     @PostMapping("/createUser")
    /* public ResponseEntity<User> createUser(@RequestBody UserPojo userPojo){
@@ -50,11 +109,11 @@ public class userController {
         }
 */
 	public EmailService getUserService() {
-		return userService;
+		return userServiceMail;
 	}
 
 	public void setUserService(EmailService userService) {
-		this.userService = userService;
+		this.userServiceMail = userService;
 	}
 
 	public EntityManager getEntityManager() {

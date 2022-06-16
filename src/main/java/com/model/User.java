@@ -1,6 +1,8 @@
 package com.model;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name="usuario")
@@ -17,12 +19,28 @@ public class User implements Serializable {
    private String correo;
    private String contrasena;
    private long id_Rolf;
-    
+   
+   @Transient
+   private String passwordConfirm;
+   
+   @ManyToMany
+   private Set<Rol> roles;
+   
  public User() {
 	// TODO Auto-generated constructor stub
 }
 
-
+ 	public interface userService {
+	    static Collection<User> getUsers() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	    static User addUser(User user) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
+ 
 public User(long id_Usuario, String nombre, String documento, String telefono, String direccion, String correo,
 		String contrasena, Long id_Rolf) {
 	this.id_Usuario = id_Usuario;
@@ -119,6 +137,27 @@ public void setId_Rolf(long id_Rolf) {
 public static long getSerialversionuid() {
 	return serialVersionUID;
 }
+
+
+public Set<Rol> getRoles() {
+	return roles;
+}
+
+
+public void setRoles(Set<Rol> roles) {
+	this.roles = roles;
+}
+
+
+public String getPasswordConfirm() {
+	return passwordConfirm;
+}
+
+
+public void setPasswordConfirm(String passwordConfirm) {
+	this.passwordConfirm = passwordConfirm;
+}
+
 
 
 }

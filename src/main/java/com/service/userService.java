@@ -4,11 +4,17 @@ package com.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.model.User;
+
 @Service
 @Transactional
 
-public class userService {
+public interface userService {
 
+	void save(User user);
+
+    User findByUsername(String username);
+	
    /* @Autowired
     UserRepository userRepository;
 
