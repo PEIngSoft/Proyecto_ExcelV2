@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.model.User;
 import com.service.EmailService;
@@ -52,7 +55,7 @@ public class userController {
 
         model.addAttribute("userForm", new User());
 
-        return "registration";
+        return "registraton";
     }
 
     @PostMapping("/registration")
@@ -67,13 +70,14 @@ public class userController {
 
         securityService.autoLogin(userForm.getNombre(), userForm.getPasswordConfirm());
 
-        return "redirect:/index";
+        return "redirect:/index.html";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @GetMapping(value = "/login")
     public String login(Model model, String error, String logout) {
-        if (securityService.isAuthenticated()) {
-            return "redirect:/";
+        
+    	if (securityService.isAuthenticated()) {
+            return "redirect:/welcome";
         }
 
         if (error != null)
@@ -87,7 +91,7 @@ public class userController {
 
     @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
     public String welcome(Model model) {
-        return "welcome";
+        return "welcome.html";
     }
     
 
@@ -146,6 +150,19 @@ public class userController {
 
 	public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
+	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver secondaryTemplateResolver() {
+	    ClassLoaderTemplateResolver secondaryTemplateResolver = new ClassLoaderTemplateResolver();
+	    secondaryTemplateResolver.setPrefix("templates/");
+	    secondaryTemplateResolver.setSuffix(".html");
+	    secondaryTemplateResolver.setTemplateMode(TemplateMode.HTML);
+	    secondaryTemplateResolver.setCharacterEncoding("UTF-8");
+	    secondaryTemplateResolver.setOrder(1);
+	    secondaryTemplateResolver.setCheckExistence(true);
+	        
+	    return secondaryTemplateResolver;
 	}
 	
 }
